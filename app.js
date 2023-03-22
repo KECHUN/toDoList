@@ -3,30 +3,46 @@ const https = require("https");
 const app = express();
 const bodyParser = require("body-parser");
 app.use(express.static("public"));
-var items = [];
+let items = ["Shopping","Running","Cycling","Swimming"];
+let workItems = [];
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended:true}));
 app.set('view engine', 'ejs');
+
 app.post("/",function(req,res){
-    var item = req.body.newItem;
-    items.push(item);
-    res.redirect("/");
+    let item = req.body.newItem;
+    console.log(req.body.list);
+    if(req.body.list === "Work"){
+        workItems.push(item);
+        res.redirect("/work");
+    }
+    else{
+        items.push(item);
+        res.redirect("/");
+    }
+    
 });
 app.get("/",function(req,res){
-    var today = new Date();
+    let today = new Date();
     dayName = "";
-    var options = {
+    let options = {
         dataStyle: "full",
         day: "2-digit",
         month: "long",
         weekday: "long"
     };
     dayName = today.toLocaleString("en-US", options);
-    console.log(dayName);
-    res.render("list",{kindOfDay:dayName,newListItems:items});
+    res.render("list",{listTitle:dayName,newListItems:items});
     
 });
+app.get("/work",function(req,res){
+    res.render("list",{listTitle:"Work List",newListItems:workItems});
 
+});
+app.get("/about",function(req,res){
+    res.render("about");
+
+});
 
 
 app.listen(3000,function(){
