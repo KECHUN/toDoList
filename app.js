@@ -1,11 +1,11 @@
 const express = require("express");
 const https = require("https");
+const date = require(__dirname + "/date.js");
 const app = express();
 const bodyParser = require("body-parser");
 app.use(express.static("public"));
 let items = ["Shopping","Running","Cycling","Swimming"];
 let workItems = [];
-app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended:true}));
 app.set('view engine', 'ejs');
 
@@ -23,15 +23,7 @@ app.post("/",function(req,res){
     
 });
 app.get("/",function(req,res){
-    let today = new Date();
-    dayName = "";
-    let options = {
-        dataStyle: "full",
-        day: "2-digit",
-        month: "long",
-        weekday: "long"
-    };
-    dayName = today.toLocaleString("en-US", options);
+    dayName = date.getDay();
     res.render("list",{listTitle:dayName,newListItems:items});
     
 });
